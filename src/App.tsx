@@ -5,6 +5,7 @@ import QrScanner from 'qr-scanner';
 function App() {
   const webcamRef = useRef<Webcam>(null);
   const [fileImage, setFileImage] = useState<Blob>();
+  const [hasilQr, setHasilQr] = useState('');
 
   const videoConstraints = {
     width: 300,
@@ -62,10 +63,12 @@ function App() {
     }
     QrScanner.scanImage(file, { returnDetailedScanResult: true })
       .then((res) => {
+        setHasilQr(res.data);
         console.log(res.data);
       })
       .catch((err) => {
         console.log('no data');
+        setHasilQr('not found');
       });
   };
 
@@ -83,7 +86,10 @@ function App() {
       <button onClick={capture}>Capture</button>
       {fileImage && <img src={URL.createObjectURL(fileImage)} alt="name" />}
       {fileImage && (
-        <button onClick={() => readCodeImage(fileImage)}>Scan</button>
+        <>
+          <button onClick={() => readCodeImage(fileImage)}>Scan</button>
+          <p>{hasilQr}</p>
+        </>
       )}
     </div>
   );
